@@ -1,0 +1,27 @@
+import os
+from PIL import Image
+from ultralytics import YOLO
+
+# Load a pretrained YOLOv8n model
+model = YOLO('yolov8n.pt')
+
+# Define the path for the image
+image_path = '/Users/alirezakhosravi/Downloads/9.jpg'
+
+# Run inference on an image
+results = model([image_path])  # results list
+
+# Visualize the results
+for i, r in enumerate(results):
+    # Plot results image
+    im_bgr = r.plot()  # BGR-order numpy array
+    im_rgb = Image.fromarray(im_bgr[..., ::-1])  # RGB-order PIL image (fix applied here)
+
+    # Show results to screen (in supported environments)
+    r.show()
+
+    # Construct the save path by combining the directory of the original image and a new filename
+    save_path = os.path.join(os.path.dirname(image_path), f'results{i}.jpg')
+
+    # Save results to disk
+    im_rgb.save(save_path)
